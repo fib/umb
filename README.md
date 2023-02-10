@@ -1,38 +1,16 @@
-# create-svelte
-
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
+git clone git@github.com:fib/umb.git
+cd umb
+npm i
 npm run dev -- --open
 ```
 
-## Building
+----
 
-To create a production version of your app:
+This tool aims to provide a convenient way to browse courses offered at UMass Boston. It enables you to filter courses by keywords, subjects, and gen-ed/diversity attributes.
 
-```bash
-npm run build
-```
+Scraping done in Python with [Requests](https://requests.readthedocs.io/en/latest/). Parsed with [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
 
-You can preview the production build with `npm run preview`.
+Web UI written using [svelte-table](https://github.com/dasDaniel/svelte-table) and [Pico.css](https://picocss.com/).
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
