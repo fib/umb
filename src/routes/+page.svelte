@@ -163,13 +163,13 @@
 		grid-template-rows: 1fr;
 	}
 	.div1 {
-		grid-area: 1 / 1 / 2 / 4;
+		grid-area: 1 / 1 / 2 / 3;
 	}
 	.div2 {
-		grid-area: 1 / 4 / 2 / 6;
+		grid-area: 1 / 3 / 2 / 5;
 	}
 	.div3 {
-		grid-area: 1 / 6 / 2 / 8;
+		grid-area: 1 / 5 / 2 / 8;
 	}
 	.div4 {
 		grid-area: 1 / 8 / 2 / 9;
