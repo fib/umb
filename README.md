@@ -1,3 +1,5 @@
+##### https://umb.jossh.io
+
 ```bash
 git clone git@github.com:fib/umb.git
 cd umb
@@ -13,6 +15,6 @@ This tool aims to provide a convenient way to browse courses offered at UMass Bo
 
 Scraping done in Python with [Requests](https://requests.readthedocs.io/en/latest/). Parsed with [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
 
-Web UI written using [svelte-table](https://github.com/dasDaniel/svelte-table) and [Pico.css](https://picocss.com/).
+Web UI written in Svelte using [svelte-table](https://github.com/dasDaniel/svelte-table) and [Pico.css](https://picocss.com/).
 
 Deployed on [Cloudflare Pages](https://pages.dev).
