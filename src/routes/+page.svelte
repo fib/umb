@@ -17,7 +17,7 @@
 
 	let search = '';
 	let attributes_filter = [];
-	let subjects_filter = [];
+	let subjects_filter = data.subjects;
 
 	$: selection = {
 		number: search,
@@ -106,7 +106,7 @@
 			{#each data.subjects as subject}
 				<li>
 					<label>
-						<input type="checkbox" checked bind:group={subjects_filter} value={subject} />
+						<input type="checkbox" bind:group={subjects_filter} value={subject} />
 						{subject}
 					</label>
 				</li>
