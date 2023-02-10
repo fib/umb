@@ -72,37 +72,53 @@
 		}
 	];
 
-	const test_data = [
-		{
-			url: 'https://www.umb.edu/course_catalog/course_info/ugrd_CS_all_240',
-			number: 'CS240',
-			title: 'Programming in C',
-			credits: '3',
-			attributes: []
-		},
-		{
-			url: 'https://www.umb.edu/course_catalog/course_info/ugrd_CLSICS_all_281',
-			number: 'CLSICS281',
-			title: 'Greek Civilization: Multi-Cultural Perspectives',
-			credits: '3',
-			attributes: ['International', 'World Cultures']
-		},
-		{
-			url: 'https://www.umb.edu/course_catalog/course_info/ugrd_CLSICS_all_284',
-			number: 'CLSICS284',
-			title: 'Greek and Roman Mythology',
-			credits: '3',
-			attributes: ['International', 'Humanities']
-		}
-	];
+    let modal;
+
+    function clearFilters() {
+        attributes_filter = [];
+        subjects_filter = [];
+        search = '';
+    }
 </script>
+
+<h2>UMass Boston Course Catalog</h2>
+
+<a href="#modal" on:click={modal.showModal()} class="secondary"><small>About this tool</small></a>
+
+<dialog bind:this={modal}>
+  <article>
+    <header>
+      <!-- svelte-ignore a11y-missing-content -->
+      <a on:click={modal.close()} href="#close" aria-label="Close" class="close"></a>
+      About
+    </header>
+
+    <p>
+        This tool aims to provide a convenient way to browse courses offered at UMass Boston.
+        It enables you to filter courses by keywords, subjects, and gen-ed/diversity attributes.
+    </p>
+    <p>
+        This page loads large amounts of data which might cause some devices to slow down.
+        If you are experiencing poor performance, try selecting fewer subjects from the dropdown menu.
+    </p>
+
+    <footer style="text-align: left">
+        This website is <b>not</b> affiliated with UMass Boston.
+        Refer to the <a href="https://www.umb.edu/course_catalog">official UMB course catalog</a>
+        for the most accurate information.
+    </footer>
+    <p>
+          
+    </p>
+  </article>
+</dialog>
 
 <div class="grid filters">
 	<input class="div1" type="search" style="width: 100%" bind:value={search} placeholder="Search" />
 
 	<details role="list" class="div2">
-		<summary aria-haspopup="listbox">Subject</summary>
-		<ul role="listbox">
+		<summary aria-haspopup="listbox">Subjects</summary>
+		<ul role="listbox" class="dropdown">
 			{#each data.subjects as subject}
 				<li>
 					<label>
@@ -116,7 +132,7 @@
 
 	<details role="list" class="div3">
 		<summary aria-haspopup="listbox">Course attributes</summary>
-		<ul role="listbox">
+		<ul role="listbox" class="dropdown">
 			{#each Object.keys(attributes) as attr}
 				<li>
 					<label>
@@ -127,7 +143,9 @@
 			{/each}
 		</ul>
 	</details>
+<button class="div4 outline" on:click={clearFilters}>Clear</button>
 </div>
+
 
 <SvelteTable
 	classNameTable="table"
@@ -138,37 +156,26 @@
 
 <style>
 	.filters {
+        margin-top: 3vh;
 		display: grid;
-		grid-template-columns: repeat(5, 1fr);
+		grid-template-columns: repeat(8, 1fr);
 		grid-template-rows: 1fr;
 	}
-
-	.div1 {
-		grid-area: 1 / 1 / 2 / 3;
-	}
-	.div2 {
-		grid-area: 1 / 3 / 2 / 4;
-	}
-	.div3 {
-		grid-area: 1 / 4 / 2 / 6;
-	}
-
-	@media only screen and (max-width: 780px) {
+.div1 { grid-area: 1 / 1 / 2 / 4; }
+.div2 { grid-area: 1 / 4 / 2 / 6; }
+.div3 { grid-area: 1 / 6 / 2 / 8; }
+.div4 { grid-area: 1 / 8 / 2 / 9; }
+	@media only screen and (max-width: 1000px) {
 		.filters {
-			grid-template-columns: repeat(3, 1fr);
+			grid-template-columns: repeat(5, 1fr);
 			grid-template-rows: repeat(2, 1fr);
 		}
-		.div1 {
-			grid-area: 1 / 1 / 2 / 4;
-		}
-		.div2 {
-			grid-area: 2 / 1 / 3 / 2;
-		}
-		.div3 {
-			grid-area: 2 / 2 / 3 / 4;
-		}
+.div1 { grid-area: 1 / 1 / 2 / 4; }
+.div2 { grid-area: 1 / 4 / 2 / 6; }
+.div3 { grid-area: 2 / 1 / 3 / 4; }
+.div4 { grid-area: 2 / 4 / 3 / 6; }
 	}
-	ul {
+	.dropdown {
 		overflow-y: scroll;
 		max-height: 30vh;
 	}
