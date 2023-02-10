@@ -83,13 +83,17 @@
 
 <h2>UMass Boston Course Catalog</h2>
 
-<a href="#modal" on:click={modal.showModal()} class="secondary"><small>About this tool</small></a>
+<!-- svelte-ignore a11y-missing-attribute -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<a on:click={modal.showModal()} class="secondary"><small>About this tool</small></a>
 
 <dialog bind:this={modal}>
 	<article>
 		<header>
 			<!-- svelte-ignore a11y-missing-content -->
-			<a on:click={modal.close()} href="#close" aria-label="Close" class="close" />
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<a on:click={modal.close()} aria-label="Close" class="close" />
 			About
 		</header>
 
