@@ -25,8 +25,6 @@
 		credits: subjects_filter
 	};
 
-	$: console.log(subjects_filter);
-
 	const columns = [
 		{
 			key: 'number',
@@ -61,7 +59,7 @@
 			title: 'Attributes',
 			value: (v) => v.a.join(', '),
 			sortable: false,
-			searchValue: (v) => v.a.join(' '),
+			searchValue: (v) => v.a.sort().join(' '),
 			hideFilterHeader: true
 		},
 		{
@@ -132,7 +130,6 @@
 </div>
 
 <SvelteTable
-	style="overflow: scroll"
 	classNameTable="table"
 	{columns}
 	rows={data.courses}
