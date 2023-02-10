@@ -72,13 +72,13 @@
 		}
 	];
 
-    let modal;
+	let modal;
 
-    function clearFilters() {
-        attributes_filter = [];
-        subjects_filter = [];
-        search = '';
-    }
+	function clearFilters() {
+		attributes_filter = [];
+		subjects_filter = [];
+		search = '';
+	}
 </script>
 
 <h2>UMass Boston Course Catalog</h2>
@@ -86,31 +86,29 @@
 <a href="#modal" on:click={modal.showModal()} class="secondary"><small>About this tool</small></a>
 
 <dialog bind:this={modal}>
-  <article>
-    <header>
-      <!-- svelte-ignore a11y-missing-content -->
-      <a on:click={modal.close()} href="#close" aria-label="Close" class="close"></a>
-      About
-    </header>
+	<article>
+		<header>
+			<!-- svelte-ignore a11y-missing-content -->
+			<a on:click={modal.close()} href="#close" aria-label="Close" class="close" />
+			About
+		</header>
 
-    <p>
-        This tool aims to provide a convenient way to browse courses offered at UMass Boston.
-        It enables you to filter courses by keywords, subjects, and gen-ed/diversity attributes.
-    </p>
-    <p>
-        This page loads large amounts of data which might cause some devices to slow down.
-        If you are experiencing poor performance, try selecting fewer subjects from the dropdown menu.
-    </p>
+		<p>
+			This tool aims to provide a convenient way to browse courses offered at UMass Boston. It
+			enables you to filter courses by keywords, subjects, and gen-ed/diversity attributes.
+		</p>
+		<p>
+			This page loads large amounts of data which might cause some devices to slow down. If you are
+			experiencing poor performance, try selecting fewer subjects from the dropdown menu.
+		</p>
 
-    <footer style="text-align: left">
-        This website is <b>not</b> affiliated with UMass Boston.
-        Refer to the <a href="https://www.umb.edu/course_catalog">official UMB course catalog</a>
-        for the most accurate information.
-    </footer>
-    <p>
-          
-    </p>
-  </article>
+		<footer style="text-align: left">
+			This website is <b>not</b> affiliated with UMass Boston. Refer to the
+			<a href="https://www.umb.edu/course_catalog">official UMB course catalog</a>
+			for the most accurate information.
+		</footer>
+		<p />
+	</article>
 </dialog>
 
 <div class="grid filters">
@@ -143,9 +141,8 @@
 			{/each}
 		</ul>
 	</details>
-<button class="div4 outline" on:click={clearFilters}>Clear</button>
+	<button class="div4 outline" on:click={clearFilters}>Clear</button>
 </div>
-
 
 <SvelteTable
 	classNameTable="table"
@@ -156,24 +153,40 @@
 
 <style>
 	.filters {
-        margin-top: 3vh;
+		margin-top: 3vh;
 		display: grid;
 		grid-template-columns: repeat(8, 1fr);
 		grid-template-rows: 1fr;
 	}
-.div1 { grid-area: 1 / 1 / 2 / 4; }
-.div2 { grid-area: 1 / 4 / 2 / 6; }
-.div3 { grid-area: 1 / 6 / 2 / 8; }
-.div4 { grid-area: 1 / 8 / 2 / 9; }
+	.div1 {
+		grid-area: 1 / 1 / 2 / 4;
+	}
+	.div2 {
+		grid-area: 1 / 4 / 2 / 6;
+	}
+	.div3 {
+		grid-area: 1 / 6 / 2 / 8;
+	}
+	.div4 {
+		grid-area: 1 / 8 / 2 / 9;
+	}
 	@media only screen and (max-width: 1000px) {
 		.filters {
 			grid-template-columns: repeat(5, 1fr);
 			grid-template-rows: repeat(2, 1fr);
 		}
-.div1 { grid-area: 1 / 1 / 2 / 4; }
-.div2 { grid-area: 1 / 4 / 2 / 6; }
-.div3 { grid-area: 2 / 1 / 3 / 4; }
-.div4 { grid-area: 2 / 4 / 3 / 6; }
+		.div1 {
+			grid-area: 1 / 1 / 2 / 4;
+		}
+		.div2 {
+			grid-area: 1 / 4 / 2 / 6;
+		}
+		.div3 {
+			grid-area: 2 / 1 / 3 / 4;
+		}
+		.div4 {
+			grid-area: 2 / 4 / 3 / 6;
+		}
 	}
 	.dropdown {
 		overflow-y: scroll;
