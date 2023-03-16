@@ -35,7 +35,7 @@
 					v.s + v.n
 				}</a>`,
 			searchValue: (v, s) => {
-				let row = v.n + v.t;
+				let row = v.s + v.n + v.t;
 				row = row.toLowerCase();
 
 				return s
