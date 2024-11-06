@@ -1,20 +1,38 @@
-##### https://umb.jossh.io
+# sv
+
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+
+## Creating a project
+
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-git clone git@github.com:fib/umb.git
-cd umb
-npm i
+# create a new project in the current directory
+npx sv create
+
+# create a new project in my-app
+npx sv create my-app
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
 
-----
+## Building
 
-This tool aims to provide a convenient way to browse courses offered at UMass Boston. It enables you to filter courses by keywords, subjects, and gen-ed/diversity attributes.
+To create a production version of your app:
 
-----
+```bash
+npm run build
+```
 
-Scraping done in Python with [Requests](https://requests.readthedocs.io/en/latest/). Parsed with [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
+You can preview the production build with `npm run preview`.
 
-Web UI written in Svelte using [svelte-table](https://github.com/dasDaniel/svelte-table) and [Pico.css](https://picocss.com/).
-
-Deployed on [Cloudflare Pages](https://pages.dev).
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
