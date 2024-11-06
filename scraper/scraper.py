@@ -15,11 +15,20 @@ import pprint
 
 @dataclass
 class Class:
-    s: str       # subject
-    n: str       # number
-    t: str       # title
-    c: int       # credits
-    a: list[str] # attributes
+    id: int
+    subject: str
+    number: str
+    title: str
+    credits: int
+    attributes: list[str]
+    sections: dict
+
+@dataclass
+class Section:
+    course_id: int
+    number: int
+    days: str
+    times: list[str]
 
 distributions = {
     "arts": "AR",
@@ -47,6 +56,7 @@ subjects = [s.text.split(' |')[0].strip() for s in subjects]
 
 print(f"{len(subjects)} subjects found ({subjects})")
 
+course_id = 1
 
 for subject in subjects:
     s = r.get(course_listings_url.format(subject=subject)).text
@@ -61,16 +71,19 @@ for subject in subjects:
             course_number = h.text.split("\xa0\xa0")[0].rsplit(' ')[1]
             course_title = h.text.split("\xa0\xa0")[1].replace(" + ", "")
 
+            print(course_info_url.format(subject=subject, number=course_number))
+
             course_page = r.get(course_info_url.format(subject=subject, number=course_number)).text
             course_page = BeautifulSoup(course_page, features="html.parser")
 
-            # attempting to retrieve the course credits and attributes
+            # credits
             try:
                 course_credits = course_page.find_all("span", {"class": "class-div-info"})[5]
                 course_credits = course_credits.contents[0][0]
             except Exception:
                 course_credits = ""
 
+            # attributes
             try:
                 course_attributes = course_page.find_all("span", {"class": "class-div-info"})[8].contents[0].lower()
                 temp = []
@@ -83,18 +96,49 @@ for subject in subjects:
             except Exception:
                 course_attributes = []
 
+            # sections
+            try:
+                course_sections = {}
+                semesters = course_page.find_all("h3")[1:]
+                section_tables = course_page.find_all("table")
+                
+                for semester, semester_table in zip(semesters, section_tables):
+                    course_sections[semester.contents[0]] = []
+
+                    for section in semester_table.find_all("tr", {"class": "class-info-rows"}):
+                        section_number = section.find("td", {"data-label": "Section"}).contents[0]
+                        section_meeting = section.find("td", {"data-label": "Schedule/Time"}).contents
+
+                        section_days, section_time = None, None
+                        if len(section_meeting) == 3:
+                            section_days = section_meeting[0]
+                            section_time = section_meeting[2]
+
+                        course_sections[semester.contents[0]].append({
+                            "number": section_number,
+                            "days": section_days,
+                            "time": section_time
+                        })
+
+            except Exception:
+                course_sections = {}
+
 
             courses.append(
                 asdict(
                     Class(
+                        course_id,
                         subject,
                         course_number,
                         course_title,
                         course_credits,
-                        course_attributes 
+                        course_attributes,
+                        course_sections
                     )
                 )
             )
+
+            course_id += 1
 
             print(courses[-1])
 
@@ -103,5 +147,5 @@ for subject in subjects:
 
 pprint.pp(courses)
 
-with open("../course_catalog.json", "w") as f:
-    json.dump({"subjects": subjects, "courses": courses}, f)
+# with open("../course_catalog.json", "w") as f:
+#     json.dump({"subjects": subjects, "courses": courses}, f)
