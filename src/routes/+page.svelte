@@ -1,13 +1,53 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
+	import { page } from "$app/stores";
 	import { subjects, attributes } from "$lib/consts";
+	import { goto } from "$app/navigation";
 
 	let { data }: { data: PageData } = $props();
 
-	let search = $state("");
+	const debounce = (callback: Function, wait = 400) => {
+		let timeout: ReturnType<typeof setTimeout>;
 
-	let subjectsSelected = $state([]);
-	let attributesSelected = $state([]);
+		return (...args: any[]) => {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => callback(...args), wait);
+		};
+	};
+
+	let search = $state($page.url.searchParams.get("search"));
+
+	let subjectsSelected = $state(
+		$page.url.searchParams.get("subjects")
+			? $page.url.searchParams.get("subjects")?.split(",")
+			: [],
+	);
+	let attributesSelected = $state(
+		$page.url.searchParams.get("attributes")
+			? $page.url.searchParams.get("attributes")?.split(",")
+			: [],
+	);
+
+	function doSearch() {
+		let params = "";
+
+		if (search != "") params += `search=${search}`;
+
+		if (subjectsSelected.length > 0) {
+			if (params != "") params += "&";
+			params += `subjects=${subjectsSelected?.join(",")}`;
+		}
+
+		if (attributesSelected.length > 0) {
+			if (params != "") params += "&";
+			params += `attributes=${attributesSelected.join(",")}`;
+		}
+
+		if (params != "") params = `?${params}`;
+
+		console.log(params);
+		goto(params != '' ? params : '/');
+	}
 
 	function toggleSections(id: string) {
 		const sections = document.querySelectorAll<HTMLElement>(
@@ -28,18 +68,24 @@
 <div class="container">
 	<div class="container grid" id="search-container">
 		<input
+			autofocus
 			id="search-field"
 			placeholder="Search"
 			type="search"
 			bind:value={search}
+			oninput={debounce(doSearch)}
 		/>
-		<details id="subjects-select" class="dropdown">
+		<details
+			oninput={debounce(doSearch)}
+			id="subjects-select"
+			class="dropdown"
+		>
 			<summary>
 				<span>
-					{#if subjectsSelected.length == 0}
+					{#if subjectsSelected?.length == 0}
 						Subjects
 					{:else}
-						{subjectsSelected.join(", ")}
+						{subjectsSelected?.join(", ")}
 					{/if}
 				</span>
 			</summary>
@@ -59,13 +105,17 @@
 				{/each}
 			</ul>
 		</details>
-		<details id="attributes-select" class="dropdown">
+		<details
+			oninput={debounce(doSearch)}
+			id="attributes-select"
+			class="dropdown"
+		>
 			<summary>
 				<span>
-					{#if attributesSelected.length == 0}
+					{#if attributesSelected?.length == 0}
 						Attributes
 					{:else}
-						{attributesSelected.join(", ")}
+						{attributesSelected?.join(", ")}
 					{/if}
 				</span>
 			</summary>
@@ -85,10 +135,15 @@
 				{/each}
 			</ul>
 		</details>
-		<button type="reset" onclick={() => {
-			subjectsSelected = [];
-			attributesSelected = [];
-		}}>Clear</button>
+		<button
+			type="reset"
+			onclick={() => {
+				search = "";
+				subjectsSelected = [];
+				attributesSelected = [];
+				doSearch();
+			}}>Clear</button
+		>
 	</div>
 	<div id="table-container">
 		<table>
@@ -105,7 +160,9 @@
 				{#each data.items as course}
 					<tr
 						class="course-row"
-						onclick={() => toggleSections(course.id)}
+						onclick={() => {
+							toggleSections(course.id);
+						}}
 					>
 						<td>{course.subject}{course.number}</td>
 						<td class="course-title">{course.title}</td>
@@ -183,10 +240,10 @@
 		#search-container {
 			grid-template:
 				"a a" auto
-				"b c" auto 
-				"d d" auto / 1fr 1fr; 
+				"b c" auto
+				"d d" auto / 1fr 1fr;
 		}
-		
+
 		summary > span {
 			width: 80%;
 		}
@@ -197,7 +254,7 @@
 			width: 100%;
 			grid-template-columns: 5fr 2fr 2fr 1fr;
 		}
-		
+
 		summary > span {
 			width: 70%;
 		}
