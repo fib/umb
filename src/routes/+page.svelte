@@ -30,7 +30,7 @@
 		<input
 			id="search-field"
 			placeholder="Search"
-			type="text"
+			type="search"
 			bind:value={search}
 		/>
 		<details id="subjects-select" class="dropdown">
@@ -85,6 +85,10 @@
 				{/each}
 			</ul>
 		</details>
+		<button type="reset" onclick={() => {
+			subjectsSelected = [];
+			attributesSelected = [];
+		}}>Clear</button>
 	</div>
 	<div id="table-container">
 		<table>
@@ -156,26 +160,51 @@
 	}
 
 	#search-container {
-		margin-top: 5rem;
+		margin: 5rem 0 2rem;
 	}
 
 	@media (max-width: 1100px) {
+		#search-container > #search-field {
+			grid-area: a;
+		}
+
+		#search-container > #subjects-select {
+			grid-area: b;
+		}
+
+		#search-container > #attributes-select {
+			grid-area: c;
+		}
+
+		#search-container > button {
+			grid-area: d;
+		}
+
 		#search-container {
 			grid-template:
 				"a a" auto
-				"b c" auto / 1fr 1fr;
+				"b c" auto 
+				"d d" auto / 1fr 1fr; 
+		}
+		
+		summary > span {
+			width: 80%;
 		}
 	}
 
 	@media (min-width: 1101px) {
 		#search-container {
-			grid-template-columns: 3fr 1fr 1fr;
+			width: 100%;
+			grid-template-columns: 5fr 2fr 2fr 1fr;
+		}
+		
+		summary > span {
+			width: 70%;
 		}
 	}
 
 	summary > span {
 		position: absolute;
-		width: 70%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
