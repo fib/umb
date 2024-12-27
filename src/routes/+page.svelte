@@ -6,7 +6,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const debounce = (callback: Function, wait = 400) => {
+	const debounce = (callback: Function, wait = 100) => {
 		let timeout: ReturnType<typeof setTimeout>;
 
 		return (...args: any[]) => {
