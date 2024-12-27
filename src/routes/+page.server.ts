@@ -9,21 +9,21 @@ export const load: PageServerLoad = async ({ url }) => {
 		attributes: url.searchParams.get('attributes')?.split(','),
 	};
 
-	let searchFilter = '';
+	let coursesFilter = '';
 
 	if (query.search) {
 		let tokens = query.search.split(/\s+/);
-		searchFilter += `(${tokens.map(t => `(title ~ "${t}")`).join(' || ')})`;
+		coursesFilter += `(${tokens.map(t => `(title ~ "${t}")`).join(' || ')})`;
 	}
 
 	if (query.subjects) {
-		if (searchFilter != '') searchFilter += ' && ';
-		searchFilter += `(${query.subjects.map(s => `subject = "${s}"`).join(' || ')})`;
+		if (coursesFilter != '') coursesFilter += ' && ';
+		coursesFilter += `(${query.subjects.map(s => `subject = "${s}"`).join(' || ')})`;
 	}
 
 	if (query.attributes) {
-		if (searchFilter != '') searchFilter += ' && ';
-		searchFilter += `(${query.attributes?.map(a => `attributes ~ "${a}"`).join(' || ')})`;
+		if (coursesFilter != '') coursesFilter += ' && ';
+		coursesFilter += `(${query.attributes?.map(a => `attributes ~ "${a}"`).join(' || ')})`;
 	}
 
 	const pb = new PocketBase(PB_HOST);
@@ -31,18 +31,15 @@ export const load: PageServerLoad = async ({ url }) => {
 	await pb.admins.authWithPassword(PB_USER, PB_PASSWORD);
 
 	const courses = await pb.collection('courses').getList(1, 50, {
-		filter: searchFilter,
+		filter: coursesFilter,
 	});
 
 	let sectionsFilter = courses.items.map(c => `course_id = "${c.id}"`).join(" || ");
 
-	let sections = await pb.collection('sections').getFullList({
-		filter: sectionsFilter,
-	});;
-
-	for (let c of courses.items) {
-		c.sections = sections.filter(s => s.course_id == c.id);
+	return {
+		courses: courses.items,
+		sections: pb.collection('sections').getFullList({
+			filter: sectionsFilter
+		})
 	}
-
-	return courses;
 };

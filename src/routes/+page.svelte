@@ -6,7 +6,11 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const debounce = (callback: Function, wait = 300) => {
+	console.log("$$$$$");
+
+	console.log(data);
+
+	const debounce = (callback: Function, wait = 200) => {
 		let timeout: ReturnType<typeof setTimeout>;
 
 		return (...args: any[]) => {
@@ -46,7 +50,7 @@
 		if (params != "") params = `?${params}`;
 
 		console.log(params);
-		goto(params != '' ? params : '/');
+		goto(params != "" ? params : "/");
 	}
 
 	function toggleSections(id: string) {
@@ -157,7 +161,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.items as course}
+				{#each data.courses as course}
 					<tr
 						class="course-row"
 						onclick={() => {
@@ -168,9 +172,21 @@
 						<td class="course-title">{course.title}</td>
 						<td>{course.credits}</td>
 						<td>{course.attributes}</td>
-						<td>{course.sections.length}</td>
+						<td>
+							{#await data.sections}
+								.
+							{:then sections}
+								{sections.filter(
+									(s) => s.course_id == course.id,
+								).length}
+							{/await}
+						</td>
 					</tr>
-					{#if course.sections.length > 0}
+					{#await data.sections}
+					<!--  -->
+					{:then sections}
+						{@const course_sections = sections.filter(s => s.course_id == course.id)}
+						{#if course_sections.length > 0}
 						<tr class="sections" data-id={course.id}>
 							<td class="sections-cell" colspan="5">
 								<div>
@@ -187,16 +203,12 @@
 											</tr>
 										</thead>
 										<tbody>
-											{#each course.sections as section}
+											{#each course_sections as section}
 												<tr>
 													<td>{section.number}</td>
-													<td>{section.instructor}</td
-													>
+													<td>{section.instructor}</td>
 													<td>{section.location}</td>
-													<td
-														>{section.days}
-														{section.times}</td
-													>
+													<td>{section.days}{section.times}</td>
 												</tr>
 											{/each}
 										</tbody>
@@ -204,7 +216,16 @@
 								</div>
 							</td>
 						</tr>
-					{/if}
+						{/if}
+					{:catch error}
+						<tr
+							><td
+								><p>
+									error loading sections {error.message}
+								</p></td
+							></tr
+						>
+					{/await}
 				{/each}
 			</tbody>
 		</table>
