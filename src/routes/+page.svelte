@@ -37,12 +37,12 @@
 
 		if (search != "") params += `search=${search}`;
 
-		if (subjectsSelected.length > 0) {
+		if (subjectsSelected && subjectsSelected.length > 0) {
 			if (params != "") params += "&";
 			params += `subjects=${subjectsSelected?.join(",")}`;
 		}
 
-		if (attributesSelected.length > 0) {
+		if (attributesSelected && attributesSelected.length > 0) {
 			if (params != "") params += "&";
 			params += `attributes=${attributesSelected.join(",")}`;
 		}
