@@ -42,8 +42,6 @@ export const load: PageServerLoad = async ({ url }) => {
 
 	for (let c of courses.items) {
 		c.sections = sections.filter(s => s.course_id == c.id);
-
-		console.log(c.sections);
 	}
 
 	return courses;
