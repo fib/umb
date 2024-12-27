@@ -316,6 +316,7 @@
 	.section-table td,
 	.section-table th {
 		background-color: var(--pico-table-row-stripped-background-color);
+		padding: 0.5rem;
 	}
 
 	.course-title {
