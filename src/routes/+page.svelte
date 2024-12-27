@@ -6,10 +6,6 @@
 
 	let { data }: { data: PageData } = $props();
 
-	console.log("$$$$$");
-
-	console.log(data);
-
 	const debounce = (callback: Function, wait = 200) => {
 		let timeout: ReturnType<typeof setTimeout>;
 
@@ -250,6 +246,10 @@
 
 	#search-container {
 		margin: 5rem 0 2rem;
+	}
+
+	#table-container {
+		margin-bottom: 5rem;
 	}
 
 	@media (max-width: 1100px) {
