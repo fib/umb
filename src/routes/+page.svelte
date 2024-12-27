@@ -183,39 +183,50 @@
 						</td>
 					</tr>
 					{#await data.sections}
-					<!--  -->
+						<!--  -->
 					{:then sections}
-						{@const course_sections = sections.filter(s => s.course_id == course.id)}
+						{@const course_sections = sections.filter(
+							(s) => s.course_id == course.id,
+						)}
 						{#if course_sections.length > 0}
-						<tr class="sections" data-id={course.id}>
-							<td class="sections-cell" colspan="5">
-								<div>
-									<table class="section-table">
-										<thead>
-											<tr>
-												<th class="section-number">#</th
-												>
-												<th class="section-instructor"
-													>Instructor</th
-												>
-												<th>Location</th>
-												<th>Meetings</th>
-											</tr>
-										</thead>
-										<tbody>
-											{#each course_sections as section}
+							<tr class="sections" data-id={course.id}>
+								<td class="sections-cell" colspan="5">
+									<div>
+										<table class="section-table">
+											<thead>
 												<tr>
-													<td>{section.number}</td>
-													<td>{section.instructor}</td>
-													<td>{section.location}</td>
-													<td>{section.days}{section.times}</td>
+													<th class="section-number"
+														>#</th
+													>
+													<th
+														class="section-instructor"
+														>Instructor</th
+													>
+													<th>Location</th>
+													<th>Meetings</th>
 												</tr>
-											{/each}
-										</tbody>
-									</table>
-								</div>
-							</td>
-						</tr>
+											</thead>
+											<tbody>
+												{#each course_sections as section}
+													<tr>
+														<td>{section.number}</td
+														>
+														<td
+															>{section.instructor}</td
+														>
+														<td
+															>{section.location}</td
+														>
+														<td
+															>{section.days}{section.times}</td
+														>
+													</tr>
+												{/each}
+											</tbody>
+										</table>
+									</div>
+								</td>
+							</tr>
 						{/if}
 					{:catch error}
 						<tr
@@ -295,6 +306,16 @@
 
 	.sections {
 		display: none;
+	}
+
+	.section-table {
+		margin-bottom: 0;
+		font-size: 0.85rem;
+	}
+
+	.section-table td,
+	.section-table th {
+		background-color: var(--pico-table-row-stripped-background-color);
 	}
 
 	.course-title {
