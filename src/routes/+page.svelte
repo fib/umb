@@ -149,7 +149,7 @@
 			}}>Clear</button
 		>
 	</div>
-	<div id="table-container">
+	<div id="table-container" class="overflow-auto">
 		<table>
 			<thead>
 				<tr>
