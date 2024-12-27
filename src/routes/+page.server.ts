@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { PB_HOST, PB_USER, PB_PASSWORD } from '$env/static/private';
 import PocketBase from 'pocketbase';
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -18,18 +19,16 @@ export const load: PageServerLoad = async ({ url }) => {
 	if (query.subjects) {
 		if (searchFilter != '') searchFilter += ' && ';
 		searchFilter += `(${query.subjects.map(s => `subject = "${s}"`).join(' || ')})`;
-	} 
+	}
 
 	if (query.attributes) {
 		if (searchFilter != '') searchFilter += ' && ';
 		searchFilter += `(${query.attributes?.map(a => `attributes ~ "${a}"`).join(' || ')})`;
 	}
 
-	console.log(searchFilter);
+	const pb = new PocketBase(PB_HOST);
 
-	const pb = new PocketBase('http://127.0.0.1:8090');
-
-	await pb.admins.authWithPassword('jkotlerj@gmail.com', '!%yr#Nt6LBGbT4CL');
+	await pb.admins.authWithPassword(PB_USER, PB_PASSWORD);
 
 	const courses = await pb.collection('courses').getList(1, 50, {
 		filter: searchFilter,
