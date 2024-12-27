@@ -34,10 +34,16 @@ export const load: PageServerLoad = async ({ url }) => {
 		filter: searchFilter,
 	});
 
-	for (var c of courses.items) {
-		c.sections = await pb.collection('sections').getFullList({
-			filter: `course_id = "${c.id}"`,
-		});
+	let sectionsFilter = courses.items.map(c => `course_id = "${c.id}"`).join(" || ");
+
+	let sections = await pb.collection('sections').getFullList({
+		filter: sectionsFilter,
+	});;
+
+	for (let c of courses.items) {
+		c.sections = sections.filter(s => s.course_id == c.id);
+
+		console.log(c.sections);
 	}
 
 	return courses;
