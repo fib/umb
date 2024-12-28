@@ -9,6 +9,8 @@
 
 	let { data }: { data: PageData } = $props();
 
+	let mobile = (innerWidth.current ? innerWidth.current : 0) <= 1100;
+
 	let search = $state(page.url.searchParams.get("search"));
 	let instructor = $state(page.url.searchParams.get("instructor"));
 
@@ -162,10 +164,10 @@
 		<table>
 			<thead>
 				<tr>
-					<th></th>
+					<!-- <th></th> -->
 					<th class="course-number">#</th>
 					<th class="course-title">Title</th>
-					{#if innerWidth.current && innerWidth.current > 1100}
+					{#if mobile}
 						<th class="course-credits">Credits</th>
 						<th class="course-attributes">Attributes</th>
 					{/if}
@@ -175,19 +177,13 @@
 			<tbody>
 				{#each data.courses as course}
 					<tr class="course-row">
-						<td class="course-number-link"
-							><a
-								class="secondary"
-								href={courseUrl(course.subject, course.number)}
-								>🔗</a
-							></td
-						>
 						<td class="course-number"
-							>{course.subject}{course.number}</td
+							><a class="course-link secondary"
+								href={courseUrl(course.subject, course.number)}>{course.subject}{course.number}</td
 						>
 						<td class="course-title">{course.title}</td>
 
-						{#if innerWidth.current && innerWidth.current > 1100}
+						{#if mobile}
 							<td class="course-credits">{course.credits}</td>
 							<td class="course-attributes"
 								>{course.attributes}</td
@@ -355,6 +351,20 @@
 
 	.course-number-link > a {
 		padding: 0;
+	}
+
+	.course-link {
+		text-decoration-line: none;
+	}
+
+	.course-link::before {
+		content: '🔗';
+		font-size: 0.7rem;
+		vertical-align: middle;
+		position: relative;
+		/* right: 0.3rem; */
+		margin-right: 0.3rem;
+		/* text-decoration-line: underline; */
 	}
 
 	.sections-arrow > span {
