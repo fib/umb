@@ -5,6 +5,8 @@
 	import { subjects, attributes, courseUrl } from "$lib/consts";
 	import { debounce } from "$lib/util";
 
+	import { innerWidth } from "svelte/reactivity/window";
+
 	let { data }: { data: PageData } = $props();
 
 	let search = $state(page.url.searchParams.get("search"));
@@ -163,8 +165,10 @@
 					<th></th>
 					<th class="course-number">#</th>
 					<th class="course-title">Title</th>
-					<th class="course-credits">Credits</th>
-					<th class="course-attributes">Attributes</th>
+					{#if innerWidth.current && innerWidth.current > 1100}
+						<th class="course-credits">Credits</th>
+						<th class="course-attributes">Attributes</th>
+					{/if}
 					<th class="course-sections">Sections</th>
 				</tr>
 			</thead>
@@ -182,8 +186,13 @@
 							>{course.subject}{course.number}</td
 						>
 						<td class="course-title">{course.title}</td>
-						<td>{course.credits}</td>
-						<td>{course.attributes}</td>
+
+						{#if innerWidth.current && innerWidth.current > 1100}
+							<td class="course-credits">{course.credits}</td>
+							<td class="course-attributes"
+								>{course.attributes}</td
+							>
+						{/if}
 						<td class="course-sections-value">
 							{#await data.sections}
 								⏳
