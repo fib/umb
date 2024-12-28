@@ -9,7 +9,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let mobile = (innerWidth.current ? innerWidth.current : 0) <= 1100;
+	let mobile = $state((innerWidth.current ? innerWidth.current : 0) <= 1100);
 
 	let search = $state(page.url.searchParams.get("search"));
 	let instructor = $state(page.url.searchParams.get("instructor"));
@@ -167,7 +167,7 @@
 					<!-- <th></th> -->
 					<th class="course-number">#</th>
 					<th class="course-title">Title</th>
-					{#if mobile}
+					{#if !mobile}
 						<th class="course-credits">Credits</th>
 						<th class="course-attributes">Attributes</th>
 					{/if}
@@ -183,7 +183,7 @@
 						>
 						<td class="course-title">{course.title}</td>
 
-						{#if mobile}
+						{#if !mobile}
 							<td class="course-credits">{course.credits}</td>
 							<td class="course-attributes"
 								>{course.attributes}</td
