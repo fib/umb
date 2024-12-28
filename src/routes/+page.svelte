@@ -9,7 +9,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let mobile = $state((innerWidth.current ? innerWidth.current : 0) <= 1100);
+	let mobile: boolean = $state((innerWidth.current ? innerWidth.current : 0) <= 1100);
 
 	let search = $state(page.url.searchParams.get("search"));
 	let instructor = $state(page.url.searchParams.get("instructor"));
@@ -164,7 +164,6 @@
 		<table>
 			<thead>
 				<tr>
-					<!-- <th></th> -->
 					<th class="course-number">#</th>
 					<th class="course-title">Title</th>
 					{#if !mobile}
@@ -341,16 +340,6 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-	}
-
-	.course-number-link {
-		font-size: 0.7rem;
-		vertical-align: middle;
-		padding-right: 0.6rem;
-	}
-
-	.course-number-link > a {
-		padding: 0;
 	}
 
 	.course-link {
