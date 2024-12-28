@@ -32,22 +32,19 @@ export const load: PageServerLoad = async ({ url }) => {
 	await pb.admins.authWithPassword(PB_USER, PB_PASSWORD);
 
 	if (query.instructor && query.instructor != "") {
-		let filter = `(${query.instructor.split(/\s+/).map(t => `name ~ "${t}"`).join(' || ')})`;
+		const instructorTokens = query.instructor.split(/\s+/);
+		let filter = `(${instructorTokens.map(t => `name ~ "${t}"`).join(' || ')})`;
 		if (query.search) filter += ` && (${query.search.split(/\s+/).map(t => `course.title ~ "${t}"`).join(' || ')})`;
-
-		console.log(filter);
 
 		const instructorCourses = await pb.collection('instructors').getList(1, 50, {
 			filter,
 			expand: "course",
 		});
 
-		console.log(instructorCourses.items.map(c => c.expand).map(c => c?.course));
 		const courses = instructorCourses.items.map(c => c.expand).map(c => c?.course);
 
-		let sectionsFilter = courses.map(c => `course_id = "${c.id}"`).join(" || ");
-
-		console.log(sectionsFilter);
+		let sectionsFilter = `(${courses.map(c => `course_id = "${c.id}"`).join(" || ")})`;
+		sectionsFilter += ` && (${instructorTokens.map(t => `instructor ~ "${t}"`).join(" || ")})`;
 
 		return {
 			courses: courses,
@@ -62,7 +59,6 @@ export const load: PageServerLoad = async ({ url }) => {
 	});
 
 	let sectionsFilter = courses.items.map(c => `course_id = "${c.id}"`).join(" || ");
-console.log(sectionsFilter);
 	return {
 		courses: courses.items,
 		sections: pb.collection('sections').getFullList({

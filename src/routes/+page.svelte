@@ -2,7 +2,7 @@
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
-	import { subjects, attributes } from "$lib/consts";
+	import { subjects, attributes, courseUrl } from "$lib/consts";
 	import { debounce } from "$lib/util";
 
 	let { data }: { data: PageData } = $props();
@@ -43,7 +43,6 @@
 
 		if (params != "") params = `?${params}`;
 
-		console.log(params);
 		goto(params != "" ? params : "/");
 	}
 
@@ -66,7 +65,6 @@
 <div class="container">
 	<div class="container grid" id="search-container">
 		<input
-			autofocus
 			id="search-field"
 			placeholder="Search"
 			type="search"
@@ -154,6 +152,7 @@
 		<table>
 			<thead>
 				<tr>
+					<th></th>
 					<th class="course-number">#</th>
 					<th class="course-title">Title</th>
 					<th class="course-credits">Credits</th>
@@ -169,13 +168,14 @@
 							toggleSections(course.id);
 						}}
 					>
-						<td>{course.subject}{course.number}</td>
+						<td class="course-number-link"><a class="secondary " href={courseUrl(course.subject, course.number)}>🔗</a></td>
+						<td class="course-number">{course.subject}{course.number}</td>
 						<td class="course-title">{course.title}</td>
 						<td>{course.credits}</td>
 						<td>{course.attributes}</td>
 						<td>
 							{#await data.sections}
-								.
+								⏳
 							{:then sections}
 								{sections.filter(
 									(s) => s.course_id == course.id,
@@ -191,7 +191,7 @@
 						)}
 						{#if course_sections.length > 0}
 							<tr class="sections" data-id={course.id}>
-								<td class="sections-cell" colspan="5">
+								<td class="sections-cell" colspan="6">
 									<div>
 										<table class="section-table">
 											<thead>
@@ -309,6 +309,16 @@
 		text-overflow: ellipsis;
 	}
 
+	.course-number-link {
+		font-size: 0.7rem;
+		vertical-align: middle;
+		padding-right: 0.6rem;
+	}
+
+	.course-number-link > a {
+		padding: 0;
+	}
+
 	.dropdown > ul {
 		max-height: 15rem;
 		overflow-y: auto;
@@ -331,6 +341,10 @@
 
 	.course-title {
 		width: 60%;
+	}
+
+	.course-number {
+		padding-left: 0;
 	}
 
 	.section-number {
