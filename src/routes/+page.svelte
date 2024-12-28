@@ -197,7 +197,7 @@
 										onclick={() => {
 											toggleSections(course.id);
 										}}
-										href=""
+										href="javascript:;"
 										class="sections-arrow secondary"
 									>
 										{sectionsCount}
