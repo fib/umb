@@ -16,6 +16,7 @@
 	};
 
 	let search = $state($page.url.searchParams.get("search"));
+	let instructor = $state($page.url.searchParams.get("intsructor"));
 
 	let subjectsSelected = $state(
 		$page.url.searchParams.get("subjects")
@@ -31,7 +32,7 @@
 	function doSearch() {
 		let params = "";
 
-		if (search != "") params += `search=${search}`;
+		if (search && search != "") params += `search=${search}`;
 
 		if (subjectsSelected && subjectsSelected.length > 0) {
 			if (params != "") params += "&";
@@ -41,6 +42,11 @@
 		if (attributesSelected && attributesSelected.length > 0) {
 			if (params != "") params += "&";
 			params += `attributes=${attributesSelected.join(",")}`;
+		}
+
+		if (instructor && instructor != "") {
+			if (params != "") params += "&";
+			params += `instructor=${instructor}`;
 		}
 
 		if (params != "") params = `?${params}`;
@@ -75,6 +81,13 @@
 			bind:value={search}
 			oninput={debounce(doSearch)}
 		/>
+		<input
+			id="instructor-field"
+			placeholder="Instructor"
+			type="search"
+			bind:value={instructor}
+			oninput={debounce(doSearch)}
+		>
 		<details
 			oninput={debounce(doSearch)}
 			id="subjects-select"
@@ -257,23 +270,28 @@
 			grid-area: a;
 		}
 
-		#search-container > #subjects-select {
+		#search-container > #instructor-field {
 			grid-area: b;
 		}
 
-		#search-container > #attributes-select {
+		#search-container > #subjects-select {
 			grid-area: c;
 		}
 
-		#search-container > button {
+		#search-container > #attributes-select {
 			grid-area: d;
+		}
+
+		#search-container > button {
+			grid-area: e;
 		}
 
 		#search-container {
 			grid-template:
 				"a a" auto
-				"b c" auto
-				"d d" auto / 1fr 1fr;
+				"b b" auto
+				"c d" auto
+				"e e" auto / 1fr 1fr;
 		}
 
 		summary > span {
@@ -284,7 +302,7 @@
 	@media (min-width: 1101px) {
 		#search-container {
 			width: 100%;
-			grid-template-columns: 5fr 2fr 2fr 1fr;
+			grid-template-columns: 4fr 4fr 2fr 2fr 1fr;
 		}
 
 		summary > span {

@@ -7,12 +7,13 @@ export const load: PageServerLoad = async ({ url }) => {
 		search: url.searchParams.get('search'),
 		subjects: url.searchParams.get('subjects')?.split(','),
 		attributes: url.searchParams.get('attributes')?.split(','),
+		instructor: url.searchParams.get('instructor'),
 	};
 
 	let coursesFilter = '';
 
 	if (query.search) {
-		let tokens = query.search.split(/\s+/);
+		const tokens = query.search.split(/\s+/);
 		coursesFilter += `(${tokens.map(t => `(title ~ "${t}")`).join(' || ')})`;
 	}
 
