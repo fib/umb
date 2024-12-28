@@ -3,10 +3,9 @@
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
 	import { subjects, attributes } from "$lib/consts";
-	import { debounce } from '$lib/util';
+	import { debounce } from "$lib/util";
 
 	let { data }: { data: PageData } = $props();
-
 
 	let search = $state($page.url.searchParams.get("search"));
 	let instructor = $state($page.url.searchParams.get("intsructor"));
@@ -80,7 +79,7 @@
 			type="search"
 			bind:value={instructor}
 			oninput={debounce(doSearch)}
-		>
+		/>
 		<details
 			oninput={debounce(doSearch)}
 			id="subjects-select"
