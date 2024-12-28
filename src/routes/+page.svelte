@@ -8,7 +8,7 @@
 	let { data }: { data: PageData } = $props();
 
 	let search = $state($page.url.searchParams.get("search"));
-	let instructor = $state($page.url.searchParams.get("intsructor"));
+	let instructor = $state($page.url.searchParams.get("instructor"));
 
 	let subjectsSelected = $state(
 		$page.url.searchParams.get("subjects")
