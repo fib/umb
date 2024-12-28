@@ -1,23 +1,23 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
-	import { page } from "$app/stores";
+	import { page, navigating } from "$app/state";
 	import { goto } from "$app/navigation";
 	import { subjects, attributes, courseUrl } from "$lib/consts";
 	import { debounce } from "$lib/util";
 
 	let { data }: { data: PageData } = $props();
 
-	let search = $state($page.url.searchParams.get("search"));
-	let instructor = $state($page.url.searchParams.get("instructor"));
+	let search = $state(page.url.searchParams.get("search"));
+	let instructor = $state(page.url.searchParams.get("instructor"));
 
 	let subjectsSelected = $state(
-		$page.url.searchParams.get("subjects")
-			? $page.url.searchParams.get("subjects")?.split(",")
+		page.url.searchParams.get("subjects")
+			? page.url.searchParams.get("subjects")?.split(",")
 			: [],
 	);
 	let attributesSelected = $state(
-		$page.url.searchParams.get("attributes")
-			? $page.url.searchParams.get("attributes")?.split(",")
+		page.url.searchParams.get("attributes")
+			? page.url.searchParams.get("attributes")?.split(",")
 			: [],
 	);
 
@@ -43,7 +43,7 @@
 
 		if (params != "") params = `?${params}`;
 
-		goto(params != "" ? params : "/", {keepFocus: true});
+		goto(params != "" ? params : "/", { keepFocus: true });
 	}
 
 	function toggleSections(id: string) {
@@ -149,6 +149,10 @@
 			}}>Clear</button
 		>
 	</div>
+	<!-- {@debug navigating} -->
+	{#if navigating.to}
+		<progress></progress>
+	{/if}
 	<div id="table-container" class="overflow-auto">
 		<table>
 			<thead>
@@ -169,8 +173,16 @@
 							toggleSections(course.id);
 						}}
 					>
-						<td class="course-number-link"><a class="secondary " href={courseUrl(course.subject, course.number)}>🔗</a></td>
-						<td class="course-number">{course.subject}{course.number}</td>
+						<td class="course-number-link"
+							><a
+								class="secondary"
+								href={courseUrl(course.subject, course.number)}
+								>🔗</a
+							></td
+						>
+						<td class="course-number"
+							>{course.subject}{course.number}</td
+						>
 						<td class="course-title">{course.title}</td>
 						<td>{course.credits}</td>
 						<td>{course.attributes}</td>
