@@ -342,6 +342,10 @@
 		text-overflow: ellipsis;
 	}
 
+	.course-sections {
+		max-width: 7rem;
+	}
+
 	.course-link {
 		text-decoration-line: none;
 	}
