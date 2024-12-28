@@ -43,7 +43,7 @@
 
 		if (params != "") params = `?${params}`;
 
-		goto(params != "" ? params : "/");
+		goto(params != "" ? params : "/", {keepFocus: true});
 	}
 
 	function toggleSections(id: string) {
@@ -142,6 +142,7 @@
 			type="reset"
 			onclick={() => {
 				search = "";
+				instructor = "";
 				subjectsSelected = [];
 				attributesSelected = [];
 				doSearch();
