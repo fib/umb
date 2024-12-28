@@ -51,6 +51,8 @@
 			`[data-id='${id}']`,
 		);
 
+		const arrow = document.getElementById(`arrow-${id}`);
+
 		if (sections.length > 0) {
 			sections.forEach((s) => {
 				s.style.display =
@@ -58,6 +60,8 @@
 						? "table-row"
 						: "none";
 			});
+
+			arrow?.classList.toggle("upside-down");
 		}
 	}
 </script>
@@ -149,7 +153,6 @@
 			}}>Clear</button
 		>
 	</div>
-	<!-- {@debug navigating} -->
 	{#if navigating.to}
 		<progress></progress>
 	{/if}
@@ -167,12 +170,7 @@
 			</thead>
 			<tbody>
 				{#each data.courses as course}
-					<tr
-						class="course-row"
-						onclick={() => {
-							toggleSections(course.id);
-						}}
-					>
+					<tr class="course-row">
 						<td class="course-number-link"
 							><a
 								class="secondary"
@@ -186,13 +184,31 @@
 						<td class="course-title">{course.title}</td>
 						<td>{course.credits}</td>
 						<td>{course.attributes}</td>
-						<td>
+						<td class="course-sections-value">
 							{#await data.sections}
 								⏳
 							{:then sections}
-								{sections.filter(
+								{@const sectionsCount = sections.filter(
 									(s) => s.course_id == course.id,
 								).length}
+								{#if sectionsCount > 0}
+									<!-- svelte-ignore a11y_invalid_attribute -->
+									<a
+										onclick={() => {
+											toggleSections(course.id);
+										}}
+										href=""
+										class="sections-arrow secondary"
+									>
+										{sectionsCount}
+										<span
+											id="arrow-{course.id}"
+											class="material-symbols-outlined"
+										>
+											arrow_drop_down
+										</span>
+									</a>
+								{/if}
 							{/await}
 						</td>
 					</tr>
@@ -330,6 +346,26 @@
 
 	.course-number-link > a {
 		padding: 0;
+	}
+
+	.sections-arrow > span {
+		user-select: none;
+		vertical-align: sub;
+		cursor: pointer;
+	}
+
+	.sections-arrow {
+		text-decoration-line: none;
+	}
+
+	:global(.upside-down) {
+		transform: rotate(180deg);
+	}
+
+	.course-sections-value {
+		align-items: end;
+		align-content: end;
+		text-align: right;
 	}
 
 	.dropdown > ul {
