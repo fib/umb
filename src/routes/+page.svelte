@@ -1,19 +1,12 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
-	import { subjects, attributes } from "$lib/consts";
 	import { goto } from "$app/navigation";
+	import { subjects, attributes } from "$lib/consts";
+	import { debounce } from '$lib/util';
 
 	let { data }: { data: PageData } = $props();
 
-	const debounce = (callback: Function, wait = 200) => {
-		let timeout: ReturnType<typeof setTimeout>;
-
-		return (...args: any[]) => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => callback(...args), wait);
-		};
-	};
 
 	let search = $state($page.url.searchParams.get("search"));
 	let instructor = $state($page.url.searchParams.get("intsructor"));
