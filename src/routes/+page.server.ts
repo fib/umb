@@ -10,21 +10,24 @@ export const load: PageServerLoad = async ({ url }) => {
 		instructor: url.searchParams.get('instructor'),
 	};
 
+	const fieldPrefix = (query.instructor && query.instructor != "") ? "course." : "";
+	let courses;
 	let coursesFilter = '';
+	const instructorTokens = query.instructor?.split(/\s+/);
 
 	if (query.search) {
 		const tokens = query.search.split(/\s+/);
-		coursesFilter += `(${tokens.map(t => `(title ~ "${t}")`).join(' || ')})`;
+		coursesFilter += `(${tokens.map(t => `${fieldPrefix}title ~ "${t}"`).join(' || ')})`;
 	}
 
 	if (query.subjects) {
 		if (coursesFilter != '') coursesFilter += ' && ';
-		coursesFilter += `(${query.subjects.map(s => `subject = "${s}"`).join(' || ')})`;
+		coursesFilter += `(${query.subjects.map(s => `${fieldPrefix}subject = "${s}"`).join(' || ')})`;
 	}
 
 	if (query.attributes) {
 		if (coursesFilter != '') coursesFilter += ' && ';
-		coursesFilter += `(${query.attributes?.map(a => `attributes ~ "${a}"`).join(' || ')})`;
+		coursesFilter += `(${query.attributes?.map(a => `${fieldPrefix}attributes ~ "${a}"`).join(' || ')})`;
 	}
 
 	const pb = new PocketBase(PB_HOST);
@@ -32,35 +35,28 @@ export const load: PageServerLoad = async ({ url }) => {
 	await pb.admins.authWithPassword(PB_USER, PB_PASSWORD);
 
 	if (query.instructor && query.instructor != "") {
-		const instructorTokens = query.instructor.split(/\s+/);
-		let filter = `(${instructorTokens.map(t => `name ~ "${t}"`).join(' || ')})`;
-		if (query.search) filter += ` && (${query.search.split(/\s+/).map(t => `course.title ~ "${t}"`).join(' || ')})`;
-
+		if (coursesFilter != "") coursesFilter += " && ";
+		coursesFilter += `(${instructorTokens?.map(t => `name ~ "${t}"`).join(' || ')})`;
 		const instructorCourses = await pb.collection('instructors').getList(1, 50, {
-			filter,
+			filter: coursesFilter,
 			expand: "course",
 		});
 
-		const courses = instructorCourses.items.map(c => c.expand).map(c => c?.course);
+		courses = instructorCourses.items.map(c => c.expand).map(c => c?.course);
+	} else {
+		courses = await pb.collection('courses').getList(1, 50, {
+			filter: coursesFilter,
+			expand: "course"
+		});
 
-		let sectionsFilter = `(${courses.map(c => `course_id = "${c.id}"`).join(" || ")})`;
-		sectionsFilter += ` && (${instructorTokens.map(t => `instructor ~ "${t}"`).join(" || ")})`;
-
-		return {
-			courses: courses,
-			sections: pb.collection('sections').getFullList({
-				filter: sectionsFilter
-			})
-		}
+		courses = courses.items;
 	}
 
-	const courses = await pb.collection('courses').getList(1, 50, {
-		filter: coursesFilter,
-	});
+	let sectionsFilter = `(${courses.map(c => `course_id = "${c.id}"`).join(" || ")})`;
+	if (instructorTokens && instructorTokens.length > 0) sectionsFilter += ` && (${instructorTokens?.map(t => `instructor ~ "${t}"`).join(" || ")})`;
 
-	let sectionsFilter = courses.items.map(c => `course_id = "${c.id}"`).join(" || ");
 	return {
-		courses: courses.items,
+		courses: courses,
 		sections: pb.collection('sections').getFullList({
 			filter: sectionsFilter
 		})
