@@ -16,6 +16,8 @@ export const load: PageServerLoad = async ({ url }) => {
 	const instructorTokens = query.instructor?.split(/\s+/);
 
 	if (query.search) {
+		query.search = query.search.replaceAll('"', '\\"');
+		query.search = query.search.replaceAll('\\', '');
 		const tokens = query.search.split(/\s+/);
 		coursesFilter += `(${tokens.map(t => `${fieldPrefix}title ~ "${t}"`).join(' || ')})`;
 	}
@@ -37,6 +39,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	if (query.instructor && query.instructor != "") {
 		if (coursesFilter != "") coursesFilter += " && ";
 		coursesFilter += `(${instructorTokens?.map(t => `name ~ "${t}"`).join(' || ')})`;
+
 		const instructorCourses = await pb.collection('instructors').getList(1, 50, {
 			filter: coursesFilter,
 			expand: "course",
